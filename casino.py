@@ -1,6 +1,6 @@
 import random
 import matplotlib.pyplot as plt
-
+import numpy as np
 
 def spin_roulette():
     """
@@ -13,7 +13,7 @@ def spin_roulette():
     )
     return outcome[0]
 
-def play_game(money, bet_percentage):
+def play_game(money, bet_percentage,games):
     """
     Simulates a game where the player bets a percentage of their money on red every time,
     and also keeps track of the highest amount of money the player ever has, the total number
@@ -65,13 +65,76 @@ def play_game(money, bet_percentage):
     # Save the plot
     filename = f"player_money_{starting_money_amount}_{bet_percentage}.png"
     plt.savefig(filename)
+    return highest_money,highest_money_bet_number
 
 def roulette_terminal():
     while True:
-        money = float(input("Enter the initial amount of money you have: "))
-        bet_percentage = float(input("Enter the percentage of money you want to bet each time: "))
-        play_game(money, bet_percentage)
-
+        money = int(input("Enter the initial amount of money you have: "))
+        bet_percentage = int(input("Enter the percentage of money you want to bet each time: "))
+        amount_of_plays = int(input("Enter the amount of times you want to run this sim: "))
+        highest_money = []
+        highest_money_bet_numbers = []
+        for game in range(amount_of_plays):
+            highest_money_value, highes_money_bet = play_game(money, bet_percentage, game)
+            highest_money.append(highest_money_value)
+            highest_money_bet_numbers.append(highes_money_bet)
+        
+        amount_of_plays_without_profit = 0
+        amount_of_plays_with_atleast_10_profit = 0
+        amount_of_plays_with_atleast_20_profit = 0
+        amount_of_plays_with_atleast_30_profit = 0
+        amount_of_plays_with_atleast_40_profit = 0
+        amount_of_plays_with_atleast_50_profit = 0
+        amount_of_plays_with_atleast_60_profit = 0
+        amount_of_plays_with_atleast_70_profit = 0
+        amount_of_plays_with_atleast_80_profit = 0
+        amount_of_plays_with_atleast_90_profit = 0
+        amount_of_plays_with_atleast_100_profit = 0
+        for index, money_in_game in enumerate(highest_money):
+            if money == highest_money[index]:
+                amount_of_plays_without_profit += 1
+            if money*1.10 < highest_money[index]:
+                amount_of_plays_with_atleast_10_profit += 1 
+            if money*1.20 < highest_money[index]:
+                amount_of_plays_with_atleast_20_profit += 1
+            if money*1.30 < highest_money[index]:
+                amount_of_plays_with_atleast_30_profit += 1
+            if money*1.40 < highest_money[index]:
+                amount_of_plays_with_atleast_40_profit += 1
+            if money*1.50 < highest_money[index]:
+                amount_of_plays_with_atleast_50_profit += 1
+            if money*1.60 < highest_money[index]:
+                amount_of_plays_with_atleast_60_profit += 1
+            if money*1.70 < highest_money[index]:
+                amount_of_plays_with_atleast_70_profit += 1
+            if money*1.80 < highest_money[index]:
+                amount_of_plays_with_atleast_80_profit += 1
+            if money*1.90 < highest_money[index]:
+                amount_of_plays_with_atleast_90_profit += 1
+            if money*2 < highest_money[index]:
+                amount_of_plays_with_atleast_100_profit += 1                                  
+        highest_money_average = np.mean(highest_money)
+        highest_bet_num_average = np.mean(highest_money_bet_numbers)           
+        print(f"amount of plays without profit: {amount_of_plays_without_profit}/{amount_of_plays}")
+        print(f"amount of plays without atleast 10% profit: {amount_of_plays_with_atleast_10_profit}/{amount_of_plays}")
+        print(f"amount of plays without atleast 20% profit: {amount_of_plays_with_atleast_20_profit}/{amount_of_plays}")
+        print(f"amount of plays without atleast 30% profit: {amount_of_plays_with_atleast_30_profit}/{amount_of_plays}")
+        print(f"amount of plays without atleast 40% profit: {amount_of_plays_with_atleast_40_profit}/{amount_of_plays}")
+        print(f"amount of plays without atleast 50% profit: {amount_of_plays_with_atleast_50_profit}/{amount_of_plays}")
+        print(f"amount of plays without atleast 60% profit: {amount_of_plays_with_atleast_60_profit}/{amount_of_plays}")
+        print(f"amount of plays without atleast 70% profit: {amount_of_plays_with_atleast_70_profit}/{amount_of_plays}")
+        print(f"amount of plays without atleast 80% profit: {amount_of_plays_with_atleast_80_profit}/{amount_of_plays}")
+        print(f"amount of plays without atleast 90% profit: {amount_of_plays_with_atleast_90_profit}/{amount_of_plays}")
+        print(f"amount of plays without atleast 100% profit: {amount_of_plays_with_atleast_100_profit}/{amount_of_plays}")
+        print(f'highest winning avg = {highest_money_average}')
+        print(f'avg bet for highest value avg= {highest_bet_num_average}')
+        plt.plot(highest_money)
+        plt.xlabel('Game Number')
+        plt.ylabel('Highest Profit')
+        plt.title('Payouts')
+        # Save the plot
+        filename = f"test with {amount_of_plays}"
+        plt.savefig(filename)
         play_again = input("Do you want to play again? (yes/no): ")
         if play_again.lower() != 'yes':
             break
